@@ -16,7 +16,7 @@ const TradeForm = ({ saveTrade }) => {
         return moment(date).format('YYYY-MM-DD');
     }
 
-    const [selectedDate, setSelectedDate] = React.useState(formatDate(getToday()));
+    const [selectedDate, setSelectedDate] = React.useState(getToday());
     
     const handleDateChange = e => {
         trade.date = formatDate(e.target.value);
