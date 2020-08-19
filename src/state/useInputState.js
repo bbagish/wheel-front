@@ -1,30 +1,44 @@
-import { useState } from 'react';
+import { useState } from "react";
+import moment from "moment";
 
 export default () => {
+  const getToday = () => {
+    const date = new Date();
+    return formatDate(date);
+  };
 
-    const [trade, setTrade] = useState({
-        symbol: '',
-        date: '',
-        purchasePrice: '',
-        numShares: '',
-        totalCost: 0
-    });
+  const formatDate = (date) => {
+    return moment(date).format("YYYY-MM-DD");
+  };
 
-    return {
-        trade,
-        onChange: event => {
-            setTrade({
-                ...trade,
-                [event.target.name]: event.target.value
-            });
-        },
+  const [trade, setTrade] = useState({
+    symbol: 'NKLA',
+    type: 'Call',
+    strikePrice: '',
+    expiration: getToday(),
+    premium: '',
+    date: getToday(),
+    status: ''
+  });
 
-        reset: () => setTrade({
-            symbol: '',
-            date: '',
-            purchasePrice: '',
-            numShares: '',
-            totalCost: 0
-        })
-    };
+  return {
+    trade,
+    onChange: (event) => {
+      setTrade({
+        ...trade,
+        [event.target.name]: event.target.value
+      });
+    },
+
+    reset: () =>
+      setTrade({
+        symbol: 'NKLA',
+        type: 'Call',
+        strikePrice: '',
+        expiration: getToday(),
+        premium: '',
+        date: getToday(),
+        status: ''
+      })
+  };
 };
