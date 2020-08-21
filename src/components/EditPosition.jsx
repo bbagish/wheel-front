@@ -7,13 +7,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const NewPositionDialog = () => {
+const EditPosition = ({ position }) => {
 
-    const [numOfShares, setShares] = useState(null);
     const [open, setOpen] = useState(false);
-    const [price, setPrice] = useState(null);
-    const [symbol, setSymbol] = useState('');
-
+    const [numOfShares, setShares] = useState(position.numOfShares);
+    const [price, setPrice] = useState(position.price);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -22,53 +20,52 @@ const NewPositionDialog = () => {
     const handleClose = () => {
         setOpen(false);
     };
-
+    
     const refreshPage = () => {
         window.location.reload(false);
     }
 
-    const handleSubmit = (e) => {
-
-        e.preventDefault();
-        fetch(`http://localhost:3000/api/positions`, {
-            method: 'POST',
+    const handleSubmit = () => {
+        fetch(`http://localhost:3000/api/positions/${position._id}`, {
+            method: 'PUT',
             headers: {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({
-                symbol: symbol,
+                symbol: position.symbol,
                 price: price,
                 numOfShares: numOfShares
             })
-        });
+        })
         handleClose();
         refreshPage();
     }
 
+
     return (
         <div>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>Add New Position</Button>
+            <Button variant="outlined" color="primary" onClick={handleClickOpen}>Edit Position</Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Add New Position</DialogTitle>
+                <DialogTitle id="form-dialog-title">Edit Position</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         To enter a new trade we need symbol, average cost per share and number of shares
           </DialogContentText>
 
                     <TextField
-                        autoComplete="off"
-                        autoFocus
                         id="symbol"
                         label="Symbol"
                         name="symbol"
                         margin="dense"
-                        onChange={e => setSymbol(e.target.value)}
-                        value={symbol}
+                        defaultValue={position.symbol}
+                        InputProps={{
+                            readOnly: true,
+                        }}
                         fullWidth
-                        required
                     />
                     <TextField
                         autoComplete="off"
+                        autoFocus
                         id="price"
                         pattern="^\d+(?:\.\d{1,2})?$"
                         type="number"
@@ -96,11 +93,11 @@ const NewPositionDialog = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={handleSubmit} type="submit" color="primary">Submit</Button>
+                    <Button onClick={handleSubmit} color="primary">Submit</Button>
                 </DialogActions>
             </Dialog>
         </div>
     );
 }
 
-export default NewPositionDialog;
+export default EditPosition;

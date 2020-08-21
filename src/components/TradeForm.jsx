@@ -1,14 +1,14 @@
 import React, { useState } from "react";
+import { useParams } from "react-router";
 import moment from "moment";
 import { Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import useInputState from "../state/useInputState";
 import DatePicker from "./DatePicker";
 
-const TradeForm = ({ saveTrade }) => {
+const TradeForm = () => {
 
   const formatDate = (date) => {
     return moment(date).format("YYYY-MM-DD");
@@ -18,19 +18,36 @@ const TradeForm = ({ saveTrade }) => {
     return formatDate(date);
   };
 
-  const { trade, reset, onChange } = useInputState();
-  const [selectedDate, setSelectedDate] = useState(getToday());
+  const refreshPage = () => {
+    window.location.reload(false);
+  }
+  let { id } = useParams();
+  let handleSubmit = (e) => {
+    console.log(e);
+    e.preventDefault()
+    fetch(`http://localhost:3000/api/positions/${id}/trades`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        type: type,
+        strikePrice: strikePrice,
+        expirationDate: expirationDate,
+        premium: premium,
+        filledDate: filledDate,
+        status: status
+      })
+    })
+    refreshPage();
+  }
+
+  const [filledDate, setFilledDate] = useState(getToday());
   const [expirationDate, setExpirationDate] = useState(getToday());
-
-  const handleDateChange = (e) => {
-    trade.date = formatDate(e.target.value);
-    setSelectedDate(e.target.value);
-  };
-
-  const handleExpirationChange = (e) => {
-    trade.expiration = formatDate(e.target.value);
-    setExpirationDate(e.target.value);
-  };
+  const [strikePrice, setStrikePrice] = useState('');
+  const [premium, setPremium] = useState('');
+  const [type, setType] = useState('Call');
+  const [status, setStatus] = useState('');
 
   const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -46,25 +63,21 @@ const TradeForm = ({ saveTrade }) => {
   return (
     <form
       autoComplete="off"
-      onSubmit={(e) => {
-        e.preventDefault();
-        saveTrade(trade);
-        reset();
-      }}
+      onSubmit={handleSubmit}
     >
       <DatePicker
         id="filledDate"
         name="Filled Date"
         limitFutureDates={true}
-        selectedDate={selectedDate}
-        handleDateChange={handleDateChange}
+        selectedDate={filledDate}
+        handleDateChange={e => setFilledDate(e.target.value)}
       />
       <DatePicker
         id="expiration"
         name="Expiration Date"
         limitFutureDates={false}
         selectedDate={expirationDate}
-        handleDateChange={handleExpirationChange}
+        handleDateChange={e => setExpirationDate(e.target.value)}
       />
       <TextField
         style={{ marginLeft: 20, marginTop: 20, display: "block" }}
@@ -74,8 +87,8 @@ const TradeForm = ({ saveTrade }) => {
         label="Strike Price"
         variant="outlined"
         name="strikePrice"
-        value={trade.strikePrice}
-        onChange={onChange}
+        value={strikePrice}
+        onChange={e => setStrikePrice(e.target.value)}
         required
       />
       <TextField
@@ -86,8 +99,8 @@ const TradeForm = ({ saveTrade }) => {
         label="Premium"
         variant="outlined"
         name="premium"
-        value={trade.premium}
-        onChange={onChange}
+        value={premium}
+        onChange={e => setPremium(e.target.value)}
         required
       />
       <FormControl
@@ -103,8 +116,8 @@ const TradeForm = ({ saveTrade }) => {
         <InputLabel htmlFor="outlined-age-native-simple">Type</InputLabel>
         <Select
           native
-          value={trade.type}
-          onChange={onChange}
+          value={type}
+          onChange={e => setType(e.target.value)}
           label="Type"
           inputProps={{
             name: "type",

@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import AppBar from "@material-ui/core/AppBar";
 import Container from "@material-ui/core/Toolbar";
+import Navigation from '../components/Navigation';
 import { Grid } from "@material-ui/core";
-import Toolbar from "@material-ui/core/Toolbar";
 import TradeForm from "../components/TradeForm";
 import TradeList from "../components/TradeList";
-import useTradeState from "../state/useTradeState";
+import EditPosition from "../components/EditPosition";
+import DeletePosition from "../components/DeletePosition";
 
-const Options = () => {
+const Options = (props) => {
 
-  const [options, setOptions] = useState();
+  const [options, setOptions] = useState([]);
   const [position, setPosition] = useState();
-  const { trades, addTrade, deleteTrade } = useTradeState([]);
 
   let { id } = useParams();
 
@@ -20,17 +19,22 @@ const Options = () => {
     fetch(`http://localhost:3000/api/positions/${id}`)
       .then(res => res.json())
       .then(res => {
+        console.log(res)
+        if(res.msg){
+            props.history.push('/404')
+        }
+
         setPosition(res);
         setOptions(res.trades);
-      })
-  }, [id]);
+      }).catch(function() {
+        console.log("error");
+    });
+  }, [id, props.history]);
 
   return (
+
     <React.Fragment>
-      <AppBar position="fixed">
-        <Toolbar>Smart Trader</Toolbar>
-      </AppBar>
-      <Toolbar />
+      <Navigation />
       <Container fixed='true'>
         <Grid container spacing={3} style={{ marginTop: 50 }}>
           {position &&
@@ -39,13 +43,21 @@ const Options = () => {
               <p>Average Share Price: ${position.price}</p>
               <p>Number of Shares: {position.numOfShares}</p>
               <p>Adjusted Cost: ${position.price * position.numOfShares}</p>
+              <div>
+                <EditPosition props={props} position={position}></EditPosition>
+              </div>
+              <br></br>
+              <div>
+                <DeletePosition></DeletePosition>
+              </div>
+
             </Grid>
           }
           <Grid item xs={2} sm={2}>
-            <TradeForm saveTrade={(trade) => addTrade(trade)} />
+            <TradeForm />
           </Grid>
           <Grid item xs={10} sm={10}>
-            <TradeList trades={options} deleteTrade={deleteTrade} />
+            <TradeList trades={options}/>
           </Grid>
         </Grid>
       </Container>

@@ -15,9 +15,9 @@ export default () => {
     symbol: 'NKLA',
     type: 'Call',
     strikePrice: '',
-    expiration: getToday(),
+    expiration: '',
     premium: '',
-    date: getToday(),
+    date: '',
     status: ''
   });
 
@@ -35,9 +35,9 @@ export default () => {
         symbol: 'NKLA',
         type: 'Call',
         strikePrice: '',
-        expiration: getToday(),
+        expiration: '',
         premium: '',
-        date: getToday(),
+        date: '',
         status: ''
       })
   };

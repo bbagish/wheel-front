@@ -1,7 +1,8 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import moment from "moment";
+// import moment from "moment";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -14,22 +15,22 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const getToday = () => {
-  const date = new Date();
-  return formatDate(date);
-};
+// const getToday = () => {
+//   const date = new Date();
+//   return formatDate(date);
+// };
 
-const limitDate = (limit) => {
-  if (limit) {
-    return getToday();
-  } else {
-    return '';
-  }
-};
+// const limitDate = (limit) => {
+//   if (limit) {
+//     return getToday();
+//   } else {
+//     return '';
+//   }
+// };
 
-const formatDate = (date) => {
-  return moment(date).format("YYYY-MM-DD");
-};
+// const formatDate = (date) => {
+//   return moment(date).format("YYYY-MM-DD");
+// };
 
 const DatePicker = (props) => {
   const classes = useStyles();
@@ -45,7 +46,7 @@ const DatePicker = (props) => {
         props.handleDateChange(val);
       }}
       className={classes.textField}
-      InputProps={{ inputProps: { max: limitDate(props.limitFutureDates) } }}
+      // InputProps={{ inputProps: { max: limitDate(props.limitFutureDates) } }}
       InputLabelProps={{
         shrink: true
       }}
