@@ -2,32 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import NewPositionDialog from '../components/NewPositionDialog';
 import Navigation from '../components/Navigation';
+import { getPositions } from '../services/positionService';
 
 const Home = () => {
 
     const [positions, setPositions] = useState([]);
-    
+
     useEffect(() => {
-        fetch("http://localhost:3000/api/positions")
-            .then(res => res.json())
-            .then(res => {
-                setPositions(res);
-            })
+        (async () => {
+            const { data: positions } = await getPositions();
+            setPositions(positions);
+        })();
     }, []);
 
     return (
         <React.Fragment>
             <Navigation />
-
             <ul>
                 {positions && positions.map(position => (
-                    <div>
+                    <div key={position._id}>
                         <Link key={position._id} to={`/positions/${position._id}`}>{position.symbol}</Link>
                     </div>
                 ))}
             </ul>
-
-            <NewPositionDialog/>
+            <NewPositionDialog setPositions={setPositions} />
         </React.Fragment>
     );
 }

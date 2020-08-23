@@ -6,14 +6,14 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { getPositions, savePosition } from '../services/positionService';
 
-const NewPositionDialog = () => {
+const NewPositionDialog = ({ setPositions }) => {
 
-    const [numOfShares, setShares] = useState(null);
+    const [numOfShares, setShares] = useState('');
     const [open, setOpen] = useState(false);
-    const [price, setPrice] = useState(null);
+    const [price, setPrice] = useState('');
     const [symbol, setSymbol] = useState('');
-
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -23,26 +23,26 @@ const NewPositionDialog = () => {
         setOpen(false);
     };
 
-    const refreshPage = () => {
-        window.location.reload(false);
+    const reset = () => {
+        setShares('');
+        setPrice('');
+        setSymbol('');
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 
         e.preventDefault();
-        fetch(`http://localhost:3000/api/positions`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                symbol: symbol,
-                price: price,
-                numOfShares: numOfShares
-            })
+        await savePosition({
+            symbol: symbol,
+            price: price,
+            numOfShares: numOfShares
         });
+
+        const { data: positions } = await getPositions();
+
+        setPositions(positions);
         handleClose();
-        refreshPage();
+        reset();
     }
 
     return (
@@ -51,9 +51,7 @@ const NewPositionDialog = () => {
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add New Position</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        To enter a new trade we need symbol, average cost per share and number of shares
-          </DialogContentText>
+                    <DialogContentText>To enter a new trade we need symbol, average cost per share and number of shares</DialogContentText>
 
                     <TextField
                         autoComplete="off"
@@ -62,8 +60,8 @@ const NewPositionDialog = () => {
                         label="Symbol"
                         name="symbol"
                         margin="dense"
-                        onChange={e => setSymbol(e.target.value)}
                         value={symbol}
+                        onChange={e => setSymbol(e.target.value)}
                         fullWidth
                         required
                     />
@@ -96,7 +94,7 @@ const NewPositionDialog = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={handleSubmit} type="submit" color="primary">Submit</Button>
+                    <Button onClick={handleSubmit} color="primary">Submit</Button>
                 </DialogActions>
             </Dialog>
         </div>

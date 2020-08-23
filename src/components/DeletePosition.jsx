@@ -6,9 +6,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { useHistory } from "react-router-dom";
+import { getPositions, deletePosition } from '../services/positionService';
 
-const EditPosition = (props) => {
+const DeletePosition = () => {
 
     const [open, setOpen] = useState(false);
 
@@ -20,23 +20,14 @@ const EditPosition = (props) => {
         setOpen(false);
     };
 
-    const refreshPage = () => {
-        window.location.reload(false);
-    }
-
     let { id } = useParams();
-    const history = useHistory();
-    const handleDelete = () => {
-        fetch(`http://localhost:3000/api/positions/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-type': 'application/json'
-          }
-        })
-        console.log("POSITION DELETE SUCCESSFULLY");
+
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        await deletePosition(id);
+        const { data: positions } = await getPositions();
+        //setPositions(positions);
         handleClose();
-        history.push('/');
-        refreshPage();
       }
 
     return (
@@ -58,4 +49,4 @@ const EditPosition = (props) => {
     );
 }
 
-export default EditPosition;
+export default DeletePosition;

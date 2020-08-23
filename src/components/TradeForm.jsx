@@ -21,6 +21,7 @@ const TradeForm = () => {
   const refreshPage = () => {
     window.location.reload(false);
   }
+  
   let { id } = useParams();
   let handleSubmit = (e) => {
     console.log(e);

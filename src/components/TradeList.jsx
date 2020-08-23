@@ -36,7 +36,6 @@ export default function TradeList({ trades }) {
 
   return (
     <React.Fragment>
-      {/* $NKLA 07/20 $35 Call Premium */}
       <Title>Recent Trades</Title>
       <Table size="small">
         <TableHead>

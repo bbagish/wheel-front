@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import Container from "@material-ui/core/Toolbar";
 import Navigation from '../components/Navigation';
 import { Grid } from "@material-ui/core";
@@ -7,32 +6,27 @@ import TradeForm from "../components/TradeForm";
 import TradeList from "../components/TradeList";
 import EditPosition from "../components/EditPosition";
 import DeletePosition from "../components/DeletePosition";
+import { getPosition } from '../services/positionService';
+const Position = (props) => {
 
-const Options = (props) => {
-
-  const [options, setOptions] = useState([]);
+  const [trades, setTrades] = useState([]);
   const [position, setPosition] = useState();
 
-  let { id } = useParams();
-
   useEffect(() => {
-    fetch(`http://localhost:3000/api/positions/${id}`)
-      .then(res => res.json())
-      .then(res => {
-        console.log(res)
-        if(res.msg){
-            props.history.push('/404')
-        }
-
-        setPosition(res);
-        setOptions(res.trades);
-      }).catch(function() {
-        console.log("error");
-    });
-  }, [id, props.history]);
+    (async () => {
+      try {
+        const positionID = props.match.params.id;
+        const { data } = await getPosition(positionID);
+        setPosition(data);
+        setTrades(data.trades);
+      } catch (ex) {
+        if (ex.response && ex.response.status === 404)
+          props.history.push("/not-found");
+      }
+    })();
+  }, [props]);
 
   return (
-
     <React.Fragment>
       <Navigation />
       <Container fixed='true'>
@@ -57,7 +51,7 @@ const Options = (props) => {
             <TradeForm />
           </Grid>
           <Grid item xs={10} sm={10}>
-            <TradeList trades={options}/>
+            <TradeList trades={trades} />
           </Grid>
         </Grid>
       </Container>
@@ -65,4 +59,4 @@ const Options = (props) => {
   );
 }
 
-export default Options;
+export default Position;
