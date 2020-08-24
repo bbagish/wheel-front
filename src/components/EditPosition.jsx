@@ -6,12 +6,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-const EditPosition = ({ position }) => {
+import { getPositions, savePosition } from '../services/positionService';
+const EditPosition = ({ position, setPositions }) => {
 
     const [open, setOpen] = useState(false);
     const [numOfShares, setShares] = useState(position.numOfShares);
     const [price, setPrice] = useState(position.price);
+    
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -20,27 +21,24 @@ const EditPosition = ({ position }) => {
     const handleClose = () => {
         setOpen(false);
     };
-    
-    const refreshPage = () => {
-        window.location.reload(false);
-    }
 
-    const handleSubmit = () => {
-        fetch(`http://localhost:3000/api/positions/${position._id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                symbol: position.symbol,
-                price: price,
-                numOfShares: numOfShares
-            })
-        })
+    const reset = () => {
+        setShares('');
+        setPrice('');
+    }
+    // TODO: handle exceptions
+    const handleSubmit = async () => {
+        await savePosition({
+            _id: position._id,
+            symbol: position.symbol,
+            price: price,
+            numOfShares: numOfShares
+        });
+        const { data } = await getPositions();
+        setPositions(data);
         handleClose();
-        refreshPage();
+        reset();
     }
-
 
     return (
         <div>

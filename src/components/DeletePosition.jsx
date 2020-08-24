@@ -8,10 +8,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { getPositions, deletePosition } from '../services/positionService';
 
-const DeletePosition = () => {
+const DeletePosition = (props) => {
 
     const [open, setOpen] = useState(false);
-
+    const { setPositions, history } = props;
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -21,13 +21,13 @@ const DeletePosition = () => {
     };
 
     let { id } = useParams();
-
+    
     const handleDelete = async (e) => {
         e.preventDefault();
         await deletePosition(id);
         const { data: positions } = await getPositions();
-        //setPositions(positions);
-        handleClose();
+        history.push("/");
+        setPositions(positions);
       }
 
     return (

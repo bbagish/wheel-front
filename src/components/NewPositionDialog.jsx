@@ -46,7 +46,7 @@ const NewPositionDialog = ({ setPositions }) => {
     }
 
     return (
-        <div>
+        <div style={{marginTop: 20}}>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>Add New Position</Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add New Position</DialogTitle>

@@ -1,23 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
-import NewPositionDialog from '../components/NewPositionDialog';
 import Navigation from '../components/Navigation';
-import { getPositions } from '../services/positionService';
+import NewPositionDialog from '../components/NewPositionDialog';
+import PositionCard from '../components/PositionCard';
 
-const Home = () => {
-
-    const [positions, setPositions] = useState([]);
-
-    useEffect(() => {
-        (async () => {
-            const { data: positions } = await getPositions();
-            setPositions(positions);
-        })();
-    }, []);
+const Home = ({positions, setPositions}) => {
 
     return (
         <React.Fragment>
             <Navigation />
+            <div className="container">
             <ul>
                 {positions && positions.map(position => (
                     <div key={position._id}>
@@ -25,7 +17,10 @@ const Home = () => {
                     </div>
                 ))}
             </ul>
+            <PositionCard />
+
             <NewPositionDialog setPositions={setPositions} />
+            </div>
         </React.Fragment>
     );
 }

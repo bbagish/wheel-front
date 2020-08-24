@@ -23,7 +23,7 @@ export default function TradeList({ trades }) {
   const refreshPage = () => {
     window.location.reload(false);
   }
-
+  //TODO: WHEN DELETING A TRADE, TRADES.ID STAYS IN THE POSITION, CHECK DB
   const handleDelete = (trade_id) => {
     fetch(`http://localhost:3000/api/positions/${id}/trades/${trade_id}`, {
       method: 'DELETE',

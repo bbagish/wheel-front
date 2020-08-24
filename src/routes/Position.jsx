@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Toolbar";
-import Navigation from '../components/Navigation';
 import { Grid } from "@material-ui/core";
+import Navigation from '../components/Navigation';
 import TradeForm from "../components/TradeForm";
 import TradeList from "../components/TradeList";
 import EditPosition from "../components/EditPosition";
@@ -30,7 +30,7 @@ const Position = (props) => {
     <React.Fragment>
       <Navigation />
       <Container fixed='true'>
-        <Grid container spacing={3} style={{ marginTop: 50 }}>
+        <Grid container spacing={3} style={{ marginTop: 15 }}>
           {position &&
             <Grid item xs={12}>
               <h1>{position.symbol}</h1>
@@ -38,17 +38,16 @@ const Position = (props) => {
               <p>Number of Shares: {position.numOfShares}</p>
               <p>Adjusted Cost: ${position.price * position.numOfShares}</p>
               <div>
-                <EditPosition props={props} position={position}></EditPosition>
+                <EditPosition {...props} position={position}></EditPosition>
               </div>
               <br></br>
               <div>
-                <DeletePosition></DeletePosition>
+                <DeletePosition {...props}></DeletePosition>
               </div>
-
             </Grid>
           }
           <Grid item xs={2} sm={2}>
-            <TradeForm />
+            <TradeForm {...props} trades={trades} setTrades={setTrades} />
           </Grid>
           <Grid item xs={10} sm={10}>
             <TradeList trades={trades} />

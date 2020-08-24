@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useParams } from "react-router";
 import moment from "moment";
 import { Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,9 +6,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DatePicker from "./DatePicker";
+import { getTrades, saveTrade } from '../services/tradeService';
 
-const TradeForm = () => {
+const TradeForm = (props) => {
 
+  const {setTrades, trades} = props;
   const formatDate = (date) => {
     return moment(date).format("YYYY-MM-DD");
   };
@@ -18,38 +19,34 @@ const TradeForm = () => {
     return formatDate(date);
   };
 
-  const refreshPage = () => {
-    window.location.reload(false);
-  }
-  
-  let { id } = useParams();
-  let handleSubmit = (e) => {
-    console.log(e);
-    e.preventDefault()
-    fetch(`http://localhost:3000/api/positions/${id}/trades`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        type: type,
-        strikePrice: strikePrice,
-        expirationDate: expirationDate,
-        premium: premium,
-        filledDate: filledDate,
-        status: status
-      })
-    })
-    refreshPage();
-  }
 
   const [filledDate, setFilledDate] = useState(getToday());
   const [expirationDate, setExpirationDate] = useState(getToday());
   const [strikePrice, setStrikePrice] = useState('');
   const [premium, setPremium] = useState('');
   const [type, setType] = useState('Call');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('OPEN');
 
+  const positionID = props.match.params.id;
+
+  const handleSubmit = async (e) => {
+    console.log("SUBMITTING");
+    e.preventDefault()
+    await saveTrade(positionID, {
+      type: type,
+      strikePrice: strikePrice,
+      expirationDate: expirationDate,
+      premium: premium,
+      filledDate: filledDate,
+      status: status
+    });
+    console.log("SAVED");
+    const { data } = await getTrades(positionID);
+
+    console.log("UPDATED STATE");
+    setTrades(data);
+  }
+  
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),

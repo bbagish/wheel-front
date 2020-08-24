@@ -1,30 +1,30 @@
 import http from "./httpService";
 
-const apiEndpoint = "/trades";
+const apiEndpoint = "trades";
 
-function tradeURL(id) {
-    return `${apiEndpoint}/${id}`;
+function tradeURL(positionID, tradeID) {
+    return `/positions/${positionID}/${apiEndpoint}/${tradeID}`;
 }
 
-export function getTrade(tradeID) {
-    return http.get(tradeURL(tradeID));
+export function getTrade(positionID, tradeID) {
+    return http.get(tradeURL(positionID, tradeID));
 }
 
-export function getTrades() {
-    return http.get(apiEndpoint);
+export function getTrades(positionID) {
+    return http.get(`/positions/${positionID}/${apiEndpoint}`);
 }
 
 // EDIT OR CREATE A NEW trade
-export function saveTrade(trade) {
+export function saveTrade(positionID, trade) {
     // IF trade EXISTS EDIT
     if (trade._id) {
         const body = { ...trade };
         delete body._id;
-        return http.put(tradeURL(trade._id), body);
+        return http.put(tradeURL(positionID, trade._id), body);
     }
-    return http.post(apiEndpoint, trade);
+    return http.post(`/positions/${positionID}/${apiEndpoint}`, trade);
 }
 
-export function deleteTrade(tradeID) {
-    return http.delete(tradeURL(tradeID));
+export function deleteTrade(positionID, tradeID) {
+    return http.delete(tradeURL(positionID, tradeID));
 }
