@@ -21,6 +21,7 @@ const NewPositionDialog = ({ setPositions }) => {
 
     const handleClose = () => {
         setOpen(false);
+        reset();
     };
 
     const reset = () => {
@@ -42,7 +43,6 @@ const NewPositionDialog = ({ setPositions }) => {
 
         setPositions(positions);
         handleClose();
-        reset();
     }
 
     return (
@@ -60,8 +60,10 @@ const NewPositionDialog = ({ setPositions }) => {
                         label="Symbol"
                         name="symbol"
                         margin="dense"
+                        type="text"
+                        inputProps={{maxLength: 5, pattern: "[a-z]"}}
                         value={symbol}
-                        onChange={e => setSymbol(e.target.value)}
+                        onChange={e => setSymbol(e.target.value.toUpperCase())}
                         fullWidth
                         required
                     />

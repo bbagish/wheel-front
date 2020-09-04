@@ -28,7 +28,3 @@ const OverlayForm = (buttonName, formName, message, handleSubmit, props) => {
         </div>
     )
 }
-
-// OverlayForm.propTypes = {
-//     children: PropTypes.element.isRequired
-// };

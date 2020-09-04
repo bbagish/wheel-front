@@ -13,6 +13,7 @@ const Position = (props) => {
   const [position, setPosition] = useState();
 
   useEffect(() => {
+    console.log(props);
     (async () => {
       try {
         const positionID = props.match.params.id;
@@ -28,7 +29,7 @@ const Position = (props) => {
 
   return (
     <React.Fragment>
-      <Navigation />
+      <Navigation user={props.user}/>
       <Container fixed='true'>
         <Grid container spacing={3} style={{ marginTop: 15 }}>
           {position &&

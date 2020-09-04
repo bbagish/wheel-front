@@ -17,11 +17,11 @@ export function getTrades(positionID) {
 // EDIT OR CREATE A NEW trade
 export function saveTrade(positionID, trade) {
     // IF trade EXISTS EDIT
-    if (trade._id) {
-        const body = { ...trade };
-        delete body._id;
-        return http.put(tradeURL(positionID, trade._id), body);
-    }
+    // if (trade._id) {
+    //     const body = { ...trade };
+    //     delete body._id;
+    //     return http.put(tradeURL(positionID, trade._id), body);
+    // }
     return http.post(`/positions/${positionID}/${apiEndpoint}`, trade);
 }
 

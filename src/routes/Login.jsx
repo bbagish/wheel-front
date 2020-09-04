@@ -1,0 +1,85 @@
+import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import auth from "../services/authService";
+const Login = ({setUser}) => {
+    const [open, setOpen] = useState(false);
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+
+    const reset = () => {
+        setUserName('');
+        setPassword('');
+    }
+
+    const doSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await auth.login(userName, password);
+            console.log(auth.getCurrentUser());
+            setUser(auth.getCurrentUser());
+            //window.location = "/";
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                // const errors = { ...this.state.errors };
+                // errors.username = ex.response.data;
+                // this.setState({ errors });
+                console.log(ex);
+            }
+        }
+        handleClose();
+    }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        reset();
+    };
+
+    return (
+        <div>
+            <Button color="inherit" onClick={handleClickOpen}>Login</Button>
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Login</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>To sign in</DialogContentText>
+                    <TextField
+                        autoComplete="off"
+                        id="userName"
+                        label="Username"
+                        name="userName"
+                        margin="dense"
+                        value={userName}
+                        onChange={e => setUserName(e.target.value)}
+                        fullWidth
+                        required
+                    />
+                    <TextField
+                        autoComplete="off"
+                        id="password"
+                        label="Password"
+                        name="password"
+                        margin="dense"
+                        type="password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        fullWidth
+                        required
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                    <Button onClick={doSubmit} type="submit" color="primary">Submit</Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    )
+}
+export default Login;

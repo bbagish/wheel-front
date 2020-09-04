@@ -1,5 +1,5 @@
 import http from "./httpService";
-
+import { getJwt } from "./authService";
 const apiEndpoint = "/positions";
 
 function positionURL(id) {
@@ -7,11 +7,13 @@ function positionURL(id) {
 }
 
 export function getPosition(positionID) {
-    return http.get(positionURL(positionID));
+    return http.get(positionURL(positionID),
+        { headers: { "x-auth-token": getJwt() }});
 }
 
 export function getPositions() {
-    return http.get(apiEndpoint);
+    return http.get(apiEndpoint,
+        { headers: { "x-auth-token": getJwt() }});
 }
 
 // EDIT OR CREATE A NEW POSITION
@@ -20,11 +22,13 @@ export function savePosition(position) {
     if (position._id) {
         const body = { ...position };
         delete body._id;
-        return http.put(positionURL(position._id), body);
+        return http.put(positionURL(position._id), body, 
+        { headers: { "x-auth-token": getJwt() }});
     }
     return http.post(apiEndpoint, position);
 }
 
 export function deletePosition(positionID) {
-    return http.delete(positionURL(positionID));
+    return http.delete(positionURL(positionID,
+        { headers: { "x-auth-token": getJwt() }}));
 }

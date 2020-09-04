@@ -1,24 +1,20 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 import Navigation from '../components/Navigation';
 import NewPositionDialog from '../components/NewPositionDialog';
 import PositionCard from '../components/PositionCard';
 
-const Home = ({positions, setPositions}) => {
+const Home = ({positions, setPositions, user, setUser}) => {
 
     return (
         <React.Fragment>
-            <Navigation />
-            <div className="container">
-            <ul>
+            <Navigation user={user} setUser={setUser}/>
+            <div className="container" style={{marginTop: '25px'}}>
                 {positions && positions.map(position => (
-                    <div key={position._id}>
-                        <Link key={position._id} to={`/positions/${position._id}`}>{position.symbol}</Link>
+                    <div key={position._id} style={{marginBottom: '15px'}}>
+                        {/* <Link key={position._id} to={`/positions/${position._id}`}>{position.symbol}</Link> */}
+                        <PositionCard position={position}/>
                     </div>
                 ))}
-            </ul>
-            <PositionCard />
-
             <NewPositionDialog setPositions={setPositions} />
             </div>
         </React.Fragment>

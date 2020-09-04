@@ -1,17 +1,17 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link as RouterLink } from 'react-router-dom'
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import TradingViewWidget from 'react-tradingview-widget';
+import { Grid } from "@material-ui/core";
+import { CardActionArea } from '@material-ui/core';
+import moment from 'moment';
 const useStyles = makeStyles({
-    // backgroundColor: 'black',
-    //color: theme.palette.primary.contrastText,
+
     root: {
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-        color: 'white',
+        // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+        color: 'black'
     },
     bullet: {
         display: 'inline-block',
@@ -26,23 +26,42 @@ const useStyles = makeStyles({
     },
 });
 
-export default function PositionCard() {
+const PositionCard = ({ position }) => {
     const classes = useStyles();
-    const bull = <span className={classes.bullet}>•</span>;
 
     return (
-        <Card className={classes.root}>
-            <CardContent>
-                <Typography variant="h1" component="h1">JETS</Typography>
-                <Typography variant="body1" component="p">Average Price: $17.23</Typography>
-                <Typography variant="body1" component="p">Number of Shares: 120</Typography>
-                <Typography variant="body1" component="p">Adjusted Cost: 120</Typography>
-                <TradingViewWidget symbol="JETS" />
-            </CardContent>
-            <CardActions>
+        <Card className={classes.root} key={position._id}>
+            <CardActionArea component={RouterLink} to={`/positions/${position._id}`}>
+                <CardContent>
+                    <Grid container spacing={3}>
+                        <Grid item xs style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Typography variant="h2" component="h2">{position.symbol}</Typography>
+                        </Grid>
+                        <Grid item xs style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div>
+                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Average Price:</span> ${position.price}</Typography>
+                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Number of Shares:</span> {position.numOfShares}</Typography>
+                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Adjusted Cost:</span> ${position.numOfShares * position.price}</Typography>
+                            </div>
+                        </Grid>
+                        <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ fontWeight: "bold" }}>
+                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Open Date: </span>{moment(position.createdAt).format('LLL')}</Typography>
+                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Opening Note: </span>-</Typography>
+                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Closing Note: </span>-</Typography>
+                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>USER: </span>{position.author.userName}</Typography>
+                            </div>
+                        </Grid>
+                    </Grid>
+
+                    {/* <TradingViewWidget symbol="JETS" /> */}
+                </CardContent>
+            </CardActionArea>
+            {/* <CardActions>
                 <Button size="small">View Position</Button>
-            </CardActions>
+            </CardActions> */}
 
         </Card>
     );
 }
+export default PositionCard;
