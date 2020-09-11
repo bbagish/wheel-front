@@ -25,10 +25,11 @@ export function savePosition(position) {
         return http.put(positionURL(position._id), body, 
         { headers: { "x-auth-token": getJwt() }});
     }
-    return http.post(apiEndpoint, position);
+    return http.post(apiEndpoint, position, { headers: { "x-auth-token": getJwt() }});
 }
 
 export function deletePosition(positionID) {
-    return http.delete(positionURL(positionID,
-        { headers: { "x-auth-token": getJwt() }}));
+    return http.delete(positionURL(positionID), {
+        headers: { "x-auth-token": getJwt() }
+      });
 }

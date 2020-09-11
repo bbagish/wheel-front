@@ -7,6 +7,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { getPositions, savePosition } from '../services/positionService';
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const NewPositionDialog = ({ setPositions }) => {
 
@@ -29,30 +31,51 @@ const NewPositionDialog = ({ setPositions }) => {
         setPrice('');
         setSymbol('');
     }
-
+    const handleKeyDown = (event) => {
+        if (event.keyCode === 13) {
+            handleSubmit(event);
+        }
+    }
     const handleSubmit = async (e) => {
-
+        const costBasis = (price * numOfShares).toFixed(2);
+        console.log(e.keyCode);
         e.preventDefault();
-        await savePosition({
-            symbol: symbol,
-            price: price,
-            numOfShares: numOfShares
-        });
+        try {
+            await savePosition({
+                symbol: symbol,
+                price: price,
+                numOfShares: numOfShares,
+                costBasis: costBasis,
+                adjustedCost: costBasis
+            });
+            const { data: positions } = await getPositions();
 
-        const { data: positions } = await getPositions();
-
-        setPositions(positions);
-        handleClose();
+            setPositions(positions);
+            handleClose();
+        } catch (ex) {
+            if (ex.response && ex.response.status === 401) {
+                return toast.error("You don't need to be logged in to do that.");
+            }
+        }
     }
 
     return (
-        <div style={{marginTop: 20}}>
+        <div style={{ marginTop: 20 }}>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>Add New Position</Button>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <ToastContainer autoClose={5000}
+                position="top-right"
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" onKeyDown={handleKeyDown} >
                 <DialogTitle id="form-dialog-title">Add New Position</DialogTitle>
                 <DialogContent>
                     <DialogContentText>To enter a new trade we need symbol, average cost per share and number of shares</DialogContentText>
-
                     <TextField
                         autoComplete="off"
                         autoFocus
@@ -61,7 +84,7 @@ const NewPositionDialog = ({ setPositions }) => {
                         name="symbol"
                         margin="dense"
                         type="text"
-                        inputProps={{maxLength: 5, pattern: "[a-z]"}}
+                        inputProps={{ maxLength: 5, pattern: "[a-z]" }}
                         value={symbol}
                         onChange={e => setSymbol(e.target.value.toUpperCase())}
                         fullWidth

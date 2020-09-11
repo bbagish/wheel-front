@@ -12,7 +12,6 @@ const EditPosition = ({ position, setPositions }) => {
     const [open, setOpen] = useState(false);
     const [numOfShares, setShares] = useState(position.numOfShares);
     const [price, setPrice] = useState(position.price);
-    
 
     const handleClickOpen = () => {
         setOpen(true);

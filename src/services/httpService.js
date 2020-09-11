@@ -1,6 +1,6 @@
 import axios from "axios";
 // import logger from "./logService";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 axios.defaults.baseURL = "http://localhost:3000/api";
 
@@ -11,8 +11,7 @@ axios.interceptors.response.use(null, error => {
     error.response.status >= 400 &&
     error.response.status < 500;
   if (!expectedError) {
-    //logger.log(error);
-    alert("An unexpected error occurred.");
+    toast.error("An unexpected error occurred.");
   }
   return Promise.reject(error);
 });

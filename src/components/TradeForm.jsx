@@ -6,47 +6,44 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DatePicker from "./DatePicker";
-import { getTrades, saveTrade } from '../services/tradeService';
+import { saveTrade } from '../services/tradeService';
+import { getPosition } from "../services/positionService";
+import { useParams } from "react-router";
 
-const TradeForm = (props) => {
+const TradeForm = ({ setPosition }) => {
 
-  const {setTrades, trades} = props;
   const formatDate = (date) => {
     return moment(date).format("YYYY-MM-DD");
   };
+
   const getToday = () => {
     const date = new Date();
     return formatDate(date);
   };
-
 
   const [filledDate, setFilledDate] = useState(getToday());
   const [expirationDate, setExpirationDate] = useState(getToday());
   const [strikePrice, setStrikePrice] = useState('');
   const [premium, setPremium] = useState('');
   const [type, setType] = useState('Call');
-  const [status, setStatus] = useState('OPEN');
-
-  const positionID = props.match.params.id;
+  const { id: positionID } = useParams();
 
   const handleSubmit = async (e) => {
-    console.log("SUBMITTING");
-    e.preventDefault()
+    e.preventDefault();
+
     await saveTrade(positionID, {
       type: type,
       strikePrice: strikePrice,
       expirationDate: expirationDate,
       premium: premium,
       filledDate: filledDate,
-      status: status
+      status: "OPEN"
     });
-    console.log("SAVED");
-    const { data } = await getTrades(positionID);
 
-    console.log("UPDATED STATE");
-    setTrades(data);
+    const { data } = await getPosition(positionID);
+    setPosition(data);
   }
-  
+
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),

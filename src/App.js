@@ -16,7 +16,6 @@ const App = () => {
     (async () => {
       const { data: positions } = await getPositions();
       setPositions(positions);
-      console.log(positions);
     })();
   }, [setPositions]);
   

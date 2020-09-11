@@ -7,19 +7,17 @@ import TradeList from "../components/TradeList";
 import EditPosition from "../components/EditPosition";
 import DeletePosition from "../components/DeletePosition";
 import { getPosition } from '../services/positionService';
+import { ToastContainer } from "react-toastify";
 const Position = (props) => {
 
-  const [trades, setTrades] = useState([]);
-  const [position, setPosition] = useState();
+  const [position, setPosition] = useState('');
 
   useEffect(() => {
-    console.log(props);
     (async () => {
       try {
         const positionID = props.match.params.id;
         const { data } = await getPosition(positionID);
         setPosition(data);
-        setTrades(data.trades);
       } catch (ex) {
         if (ex.response && ex.response.status === 404)
           props.history.push("/not-found");
@@ -29,15 +27,17 @@ const Position = (props) => {
 
   return (
     <React.Fragment>
-      <Navigation user={props.user}/>
+      <Navigation user={props.user} />
       <Container fixed='true'>
-        <Grid container spacing={3} style={{ marginTop: 15 }}>
-          {position &&
+      <ToastContainer autoClose={2000} />
+        {position &&
+          <Grid container spacing={3} style={{ marginTop: 15 }}>
             <Grid item xs={12}>
               <h1>{position.symbol}</h1>
-              <p>Average Share Price: ${position.price}</p>
+              <p>Average Share Price: ${position.price.toFixed(2)}</p>
               <p>Number of Shares: {position.numOfShares}</p>
-              <p>Adjusted Cost: ${position.price * position.numOfShares}</p>
+              <p>Cost Basis: ${position.costBasis.toFixed(2)}</p>
+              <p>Adjusted Cost: ${position.adjustedCost.toFixed(2)}</p>
               <div>
                 <EditPosition {...props} position={position}></EditPosition>
               </div>
@@ -46,14 +46,15 @@ const Position = (props) => {
                 <DeletePosition {...props}></DeletePosition>
               </div>
             </Grid>
-          }
-          <Grid item xs={2} sm={2}>
-            <TradeForm {...props} trades={trades} setTrades={setTrades} />
+            <Grid item xs={2} sm={2}>
+              <TradeForm {...props} setPosition={setPosition} />
+            </Grid>
+            <Grid item xs={10} sm={10}>
+              <TradeList {...props} position={position} setPosition={setPosition} />
+            </Grid>
           </Grid>
-          <Grid item xs={10} sm={10}>
-            <TradeList trades={trades} />
-          </Grid>
-        </Grid>
+        }
+
       </Container>
     </React.Fragment>
   );

@@ -9,8 +9,10 @@ import TableRow from "@material-ui/core/TableRow";
 import Title from "./Title";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CloseTrade from "./CloseTrade";
+import { deleteTrade } from '../services/tradeService';
 
-export default function TradeList({ trades }) {
+export default function TradeList({ position, setPosition }) {
   const formatDate = (date) => {
     return moment(date).format("DD MMMM, YYYY");
   };
@@ -18,20 +20,12 @@ export default function TradeList({ trades }) {
   const formatExpiry = (date) => {
     return moment(date).format("MM/DD");
   };
-  let { id } = useParams();
 
-  const refreshPage = () => {
-    window.location.reload(false);
-  }
-  //TODO: WHEN DELETING A TRADE, TRADES.ID STAYS IN THE POSITION, CHECK DB
-  const handleDelete = (trade_id) => {
-    fetch(`http://localhost:3000/api/positions/${id}/trades/${trade_id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    })
-    refreshPage();
+  const { id } = useParams();
+
+  const handleDelete = async (trade_id) => {
+    const {data: updatePosition} = await deleteTrade(id, trade_id);
+    setPosition(updatePosition);
   }
 
   return (
@@ -46,19 +40,23 @@ export default function TradeList({ trades }) {
             <TableCell>Premium</TableCell>
             <TableCell>Filled Date</TableCell>
             <TableCell>Status</TableCell>
+            <TableCell>Closing Price</TableCell>
+            <TableCell>Profit/Loss</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {trades &&
-            trades.map((trade, index) => (
-              <TableRow hover key={index}>
+          {position.trades &&
+            position.trades.map(trade => (
+              <TableRow hover key={trade._id}>
                 <TableCell>{formatExpiry(trade.expirationDate)}</TableCell>
                 <TableCell>${trade.strikePrice}</TableCell>
                 <TableCell>{trade.type}</TableCell>
-                <TableCell>${trade.premium}</TableCell>
+                <TableCell>${(trade.premium).toFixed(2)}</TableCell>
                 <TableCell>{formatDate(trade.filledDate)}</TableCell>
                 <TableCell>{trade.status}</TableCell>
+                <TableCell>{trade.closingPrice!=null ? `$${trade.closingPrice}`: null}</TableCell>
+                <TableCell>{trade.profit!=null ? `$${(trade.profit).toFixed(2)}`: null}</TableCell>
                 <TableCell>
                   <IconButton
                     aria-label="Delete"
@@ -68,6 +66,7 @@ export default function TradeList({ trades }) {
                   >
                     <DeleteIcon />
                   </IconButton>
+                  <Buttons positionID={id} symbol={position.symbol} trade={trade} setPosition={setPosition} />
                 </TableCell>
               </TableRow>
 
@@ -75,5 +74,15 @@ export default function TradeList({ trades }) {
         </TableBody>
       </Table>
     </React.Fragment>
+  );
+}
+
+function Buttons({ positionID, symbol, trade, setPosition }) {
+  if (trade.status === "CLOSED") {
+    return null;
+  }
+
+  return (
+    <CloseTrade positionID={positionID} symbol={symbol} trade={trade} setPosition={setPosition} />
   );
 }

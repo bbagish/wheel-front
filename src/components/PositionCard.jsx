@@ -6,11 +6,10 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from "@material-ui/core";
 import { CardActionArea } from '@material-ui/core';
-import moment from 'moment';
+// import moment from 'moment';
 const useStyles = makeStyles({
 
     root: {
-        // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
         color: 'black'
     },
     bullet: {
@@ -34,33 +33,28 @@ const PositionCard = ({ position }) => {
             <CardActionArea component={RouterLink} to={`/positions/${position._id}`}>
                 <CardContent>
                     <Grid container spacing={3}>
+                        <Grid item xs style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                            <div>
+                                <Typography variant="h3" component="h3">{position.symbol}</Typography>
+                                <Typography variant="body2" component="p">Owner: {position.author.userName.toUpperCase()}</Typography>
+                            </div>
+                        </Grid>
                         <Grid item xs style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Typography variant="h2" component="h2">{position.symbol}</Typography>
+                            <div style={{ fontWeight: "bold" }}>
+                                <Typography variant="h6" component="h6">Cost Basis: ${position.costBasis}</Typography>
+                                <Typography variant="body1" component="p">Adjusted Cost: ${position.adjustedCost}</Typography>
+                            </div>
                         </Grid>
                         <Grid item xs style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <div>
-                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Average Price:</span> ${position.price}</Typography>
-                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Number of Shares:</span> {position.numOfShares}</Typography>
-                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Adjusted Cost:</span> ${position.numOfShares * position.price}</Typography>
-                            </div>
-                        </Grid>
-                        <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <div style={{ fontWeight: "bold" }}>
-                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Open Date: </span>{moment(position.createdAt).format('LLL')}</Typography>
-                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Opening Note: </span>-</Typography>
-                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>Closing Note: </span>-</Typography>
-                                <Typography variant="body1" component="p"><span style={{ backgroundColor: 'black', borderRadius: '.15rem', color: 'white' }}>USER: </span>{position.author.userName}</Typography>
+                                <Typography variant="h6" component="h6" style={{color: 'green'}}>+${position.costBasis - position.adjustedCost}</Typography>
+                                <Typography variant="body1" component="p"style={{color: 'green'}}>+{(((position.costBasis - position.adjustedCost)/((position.costBasis + position.adjustedCost)/2))* 100).toFixed(2)}%</Typography>
+                                {/* ((1700 - 1500) / ((1700 + 1500) / 2)) X 100 */}
                             </div>
                         </Grid>
                     </Grid>
-
-                    {/* <TradingViewWidget symbol="JETS" /> */}
                 </CardContent>
             </CardActionArea>
-            {/* <CardActions>
-                <Button size="small">View Position</Button>
-            </CardActions> */}
-
         </Card>
     );
 }
