@@ -6,9 +6,9 @@ import auth from "./services/authService";
 const Home = lazy(() => import('./routes/Home'));
 const NotFound = lazy(() => import('./routes/NotFound'));
 const Position = lazy(() => import('./routes/Position'));
-const Logout = lazy(()=> import('./components/Logout'));
-const SignUp = lazy(()=> import('./routes/SignUp'));
-const SignIn = lazy(()=> import('./routes/SignIn'));
+const Logout = lazy(() => import('./components/Logout'));
+const Register = lazy(() => import('./routes/Register'));
+const SignIn = lazy(() => import('./routes/SignIn'));
 
 const App = () => {
 
@@ -21,17 +21,17 @@ const App = () => {
       setPositions(positions);
     })();
   }, [setPositions]);
-  
+
   return (
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
           <Route exact path={'/positions/:id'} component={(props) => <Position {...props} positions={positions} setPositions={setPositions} user={user} setUser={user} />} />
           <Route exact path={'/'} component={(props) => <Home {...props} positions={positions} user={user} setUser={setUser} setPositions={setPositions} />} />
-          <Route exact path={'/'} component={NotFound} />
-          <Route exact path={'/signup'} component={SignUp} />
-          <Route exact path={'/signin'} component={SignIn} />
-          <Route path="/logout" component={Logout} />
+          <Route exact path={'/register'} component={(props) => <Register {...props} />} />
+          <Route exact path={'/login'} component={(props) => <SignIn {...props} user={user} setUser={setUser} />} />
+          <Route exact path="/logout" component={Logout} />
+          <Route exact path={'/not-found'} component={NotFound} />
         </Switch>
       </Suspense>
     </Router>
