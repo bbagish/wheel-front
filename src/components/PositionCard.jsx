@@ -36,7 +36,7 @@ const PositionCard = ({ position }) => {
                         <Grid item xs style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
                             <div>
                                 <Typography variant="h3" component="h3">{position.symbol}</Typography>
-                                <Typography variant="body2" component="p">Owner: {position.author.userName.toUpperCase()}</Typography>
+                                <Typography variant="body2" component="p">Owner: {position.author.username.toUpperCase()}</Typography>
                             </div>
                         </Grid>
                         <Grid item xs style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

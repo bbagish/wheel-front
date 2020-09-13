@@ -22,7 +22,7 @@ const Navigation = ({ user, setUser }) => {
                     )}
                     {user && (
                         <React.Fragment>
-                            <Button color="inherit">{user.userName}</Button>
+                            <Button color="inherit">{user.username}</Button>
                             <Button component={ Link } to="/logout" color="inherit" >Logout</Button>
                         </React.Fragment>
                     )}

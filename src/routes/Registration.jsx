@@ -8,12 +8,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { register } from '../services/userService';
 import auth from "../services/authService";
-
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const Registration = () => {
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState('');
-    const [userName, setUserName] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleClickOpen = () => {
@@ -27,16 +28,26 @@ const Registration = () => {
 
     const reset = () => {
         setEmail('');
-        setUserName('');
+        setUsername('');
         setPassword('');
     }
 
+    const handleKeyDown = (event) => {
+        if (event.keyCode === 13) {
+            doSubmit(event);
+        }
+    }
+
     const doSubmit = async (e) => {
+        // if (!username || !email || !password) {
+        //     console.log("ENTER USER NAME");
+        // }
+
         e.preventDefault();
         try {
             const response = await register({
                 email: email,
-                userName: userName,
+                username: username,
                 password: password
             });
 
@@ -47,10 +58,10 @@ const Registration = () => {
             window.location = "/";
         } catch (ex) {
             if (ex.response && ex.response.status === 400) {
-                // const errors = { ...this.state.errors };
-                // errors.username = ex.response.data;
-                // this.setState({ errors });
-                console.log(ex);
+                if (ex.response.data.msg) {
+                    return toast.error(ex.response.data.msg);
+                }
+                return toast.error(ex.response.data);
             }
         }
         handleClose();
@@ -59,7 +70,17 @@ const Registration = () => {
     return (
         <div>
             <Button color="inherit" onClick={handleClickOpen}>Sign Up</Button>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown} aria-labelledby="form-dialog-title">
+                <ToastContainer autoClose={5000}
+                    position="top-right"
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    pauseOnHover
+                />
+
                 <DialogTitle id="form-dialog-title">Sign Up</DialogTitle>
                 <DialogContent>
                     <DialogContentText>To sign up fill out this form</DialogContentText>
@@ -77,12 +98,12 @@ const Registration = () => {
                     />
                     <TextField
                         autoComplete="off"
-                        id="userName"
+                        id="username"
                         label="Username"
-                        name="userName"
+                        name="username"
                         margin="dense"
-                        value={userName}
-                        onChange={e => setUserName(e.target.value)}
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
                         fullWidth
                         required
                     />

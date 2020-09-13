@@ -7,29 +7,31 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import auth from "../services/authService";
-const Login = ({setUser}) => {
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+
+const Login = ({ setUser }) => {
     const [open, setOpen] = useState(false);
-    const [userName, setUserName] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const reset = () => {
-        setUserName('');
+        setUsername('');
         setPassword('');
     }
 
     const doSubmit = async (e) => {
         e.preventDefault();
         try {
-            await auth.login(userName, password);
+            await auth.login(username, password);
             console.log(auth.getCurrentUser());
             setUser(auth.getCurrentUser());
-            //window.location = "/";
         } catch (ex) {
             if (ex.response && ex.response.status === 400) {
-                // const errors = { ...this.state.errors };
-                // errors.username = ex.response.data;
-                // this.setState({ errors });
-                console.log(ex);
+                return toast.error(ex.response.data);
+            }
+            if (ex.response && ex.response.status === 401) {
+                return toast.error(ex.response.data.msg);
             }
         }
         handleClose();
@@ -46,18 +48,27 @@ const Login = ({setUser}) => {
     return (
         <div>
             <Button color="inherit" onClick={handleClickOpen}>Login</Button>
+            <ToastContainer autoClose={5000}
+                position="top-right"
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                pauseOnHover
+            />
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Login</DialogTitle>
                 <DialogContent>
                     <DialogContentText>To sign in</DialogContentText>
                     <TextField
                         autoComplete="off"
-                        id="userName"
+                        id="username"
                         label="Username"
-                        name="userName"
+                        name="username"
                         margin="dense"
-                        value={userName}
-                        onChange={e => setUserName(e.target.value)}
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
                         fullWidth
                         required
                     />

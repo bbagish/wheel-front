@@ -69,10 +69,9 @@ const NewPositionDialog = ({ setPositions }) => {
                 closeOnClick
                 rtl={false}
                 pauseOnFocusLoss
-                draggable
                 pauseOnHover
             />
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" onKeyDown={handleKeyDown} >
+            <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add New Position</DialogTitle>
                 <DialogContent>
                     <DialogContentText>To enter a new trade we need symbol, average cost per share and number of shares</DialogContentText>

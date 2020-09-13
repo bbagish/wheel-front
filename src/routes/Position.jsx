@@ -29,7 +29,7 @@ const Position = (props) => {
     <React.Fragment>
       <Navigation user={props.user} />
       <Container fixed='true'>
-      <ToastContainer autoClose={2000} />
+        <ToastContainer autoClose={2000} />
         {position &&
           <Grid container spacing={3} style={{ marginTop: 15 }}>
             <Grid item xs={12}>

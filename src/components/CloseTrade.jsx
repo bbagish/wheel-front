@@ -40,6 +40,7 @@ const CloseTrade = ({ positionID, symbol, trade, setPosition }) => {
         });
 
         setPosition(updatedPosition);
+        
         handleClose();
     }
 
