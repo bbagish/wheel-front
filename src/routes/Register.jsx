@@ -78,11 +78,12 @@ export default function Register(props) {
     }
 
     const doSubmit = async (e) => {
-        // if (!username || !email || !password) {
-        //     console.log("ENTER USER NAME");
-        // }
-
         e.preventDefault();
+        
+        if (!username || !email || !password) {
+            return toast.error("All fields must be filled out.");
+        }
+
         try {
             const response = await register({
                 email: email,

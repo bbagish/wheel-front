@@ -6,13 +6,13 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Title from "./Title";
+import Typography from '@material-ui/core/Typography';
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CloseTrade from "./CloseTrade";
 import { deleteTrade } from '../services/tradeService';
 
-export default function TradeList({ position, setPosition }) {
+export default function TradeList({ user, position, setPosition }) {
   const formatDate = (date) => {
     return moment(date).format("DD MMMM, YYYY");
   };
@@ -24,13 +24,13 @@ export default function TradeList({ position, setPosition }) {
   const { id } = useParams();
 
   const handleDelete = async (trade_id) => {
-    const {data: updatePosition} = await deleteTrade(id, trade_id);
+    const { data: updatePosition } = await deleteTrade(id, trade_id);
     setPosition(updatePosition);
   }
 
   return (
     <React.Fragment>
-      <Title>Recent Trades</Title>
+      <Typography component="h2" variant="h6" color="primary" gutterBottom>Recent Trades</Typography>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -55,21 +55,23 @@ export default function TradeList({ position, setPosition }) {
                 <TableCell>${(trade.premium).toFixed(2)}</TableCell>
                 <TableCell>{formatDate(trade.filledDate)}</TableCell>
                 <TableCell>{trade.status}</TableCell>
-                <TableCell>{trade.closingPrice!=null ? `$${trade.closingPrice}`: null}</TableCell>
-                <TableCell>{trade.profit!=null ? `$${(trade.profit).toFixed(2)}`: null}</TableCell>
+                <TableCell>{trade.closingPrice != null ? `$${trade.closingPrice}` : null}</TableCell>
+                <TableCell>{trade.profit != null ? `$${(trade.profit).toFixed(2)}` : null}</TableCell>
                 <TableCell>
-                  <IconButton
-                    aria-label="Delete"
-                    onClick={() => {
-                      handleDelete(trade._id);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                  <Buttons positionID={id} symbol={position.symbol} trade={trade} setPosition={setPosition} />
+                  {(user && user._id === position.author.id) &&
+                    <React.Fragment>
+                      <IconButton
+                        aria-label="Delete"
+                        onClick={() => {
+                          handleDelete(trade._id);
+                        }}>
+                        <DeleteIcon />
+                      </IconButton>
+                      <Buttons positionID={id} symbol={position.symbol} trade={trade} setPosition={setPosition} />
+                    </React.Fragment>
+                  }
                 </TableCell>
               </TableRow>
-
             ))}
         </TableBody>
       </Table>

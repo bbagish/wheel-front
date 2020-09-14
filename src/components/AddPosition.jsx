@@ -10,7 +10,7 @@ import { getPositions, savePosition } from '../services/positionService';
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 
-const NewPositionDialog = ({ setPositions }) => {
+const AddPosition = ({ setPositions }) => {
 
     const [numOfShares, setShares] = useState('');
     const [open, setOpen] = useState(false);
@@ -38,7 +38,6 @@ const NewPositionDialog = ({ setPositions }) => {
     }
     const handleSubmit = async (e) => {
         const costBasis = (price * numOfShares).toFixed(2);
-        console.log(e.keyCode);
         e.preventDefault();
         try {
             await savePosition({
@@ -125,4 +124,4 @@ const NewPositionDialog = ({ setPositions }) => {
     );
 }
 
-export default NewPositionDialog;
+export default AddPosition;

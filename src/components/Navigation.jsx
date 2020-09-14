@@ -1,30 +1,39 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Login from '../routes/Login'
-import Typography from '@material-ui/core/Typography';
-import Registration from '../routes/Registration';
 import Button from '@material-ui/core/Button';
-const Navigation = ({ user, setUser }) => {
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from '@material-ui/core/Typography';
+import { Link } from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
+  }));
+
+const Navigation = ({ user }) => {
+    const classes = useStyles();
     return (
         <React.Fragment>
             <AppBar position="fixed">
                 <Toolbar>
                     <Typography style={{ flexGrow: 1 }}>
-                        <Link to={'/'} style={{ color: 'inherit', textDecoration: 'none' }}>SMART TRADER</Link>
+                        <Button href="/" color="inherit" variant="outlined">SMART TRADER</Button>
                     </Typography>
                     {!user && (
-                        <React.Fragment>
-                            <Login setUser={setUser}/>
-                            <Registration />
-                        </React.Fragment>
+                        <div className={classes.root}>
+                            <Button href="/login" color="inherit" variant="outlined">Login</Button>
+                            <Button href="/register" color="inherit" variant="outlined">Register</Button>
+                        </div>
                     )}
                     {user && (
-                        <React.Fragment>
-                            <Button color="inherit">{user.username}</Button>
-                            <Button component={ Link } to="/logout" color="inherit" >Logout</Button>
-                        </React.Fragment>
+                        <div className={classes.root}>
+                            <Button color="inherit" variant="outlined">{user.username}</Button>
+                            <Button component={Link} variant="outlined" to="/logout" color="inherit" >Logout</Button>
+                        </div>
                     )}
                 </Toolbar>
             </AppBar>

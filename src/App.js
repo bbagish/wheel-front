@@ -9,6 +9,7 @@ const Position = lazy(() => import('./routes/Position'));
 const Logout = lazy(() => import('./components/Logout'));
 const Register = lazy(() => import('./routes/Register'));
 const SignIn = lazy(() => import('./routes/SignIn'));
+const Dashboard = lazy(() => import('./routes/dashboard'));
 
 const App = () => {
 
@@ -26,12 +27,13 @@ const App = () => {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
-          <Route exact path={'/positions/:id'} component={(props) => <Position {...props} positions={positions} setPositions={setPositions} user={user} setUser={user} />} />
           <Route exact path={'/'} component={(props) => <Home {...props} positions={positions} user={user} setUser={setUser} setPositions={setPositions} />} />
+          <Route exact path={'/positions/:id'} component={(props) => <Position {...props} positions={positions} setPositions={setPositions} user={user} setUser={user} />} />
+          <Route exact path={'/dashboard/:id'} component={(props) => <Dashboard {...props} positions={positions} setPositions={setPositions} user={user} setUser={user} />} />
           <Route exact path={'/register'} component={(props) => <Register {...props} />} />
           <Route exact path={'/login'} component={(props) => <SignIn {...props} user={user} setUser={setUser} />} />
           <Route exact path="/logout" component={Logout} />
-          <Route exact path={'/not-found'} component={NotFound} />
+          <Route component={NotFound} />
         </Switch>
       </Suspense>
     </Router>
