@@ -53,7 +53,7 @@ const AddPosition = ({ setPositions }) => {
             handleClose();
         } catch (ex) {
             if (ex.response && ex.response.status === 401) {
-                return toast.error("You don't need to be logged in to do that.");
+                return toast.error("You need to be logged in to do that.");
             }
         }
     }

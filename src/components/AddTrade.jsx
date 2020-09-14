@@ -64,7 +64,7 @@ const AddTrade = ({ setPosition }) => {
         if(!expirationDate || !strikePrice || !premium){
             return toast.error("All fields must be filled out.");
         }
-        
+
         try {
             await saveTrade(positionID, {
                 type: type,
@@ -80,7 +80,7 @@ const AddTrade = ({ setPosition }) => {
             handleClose();
         } catch (ex) {
             if (ex.response && ex.response.status === 400) {
-                return toast.error("You don't need to be logged in to do that.");
+                return toast.error("You need to be logged in to do that.");
             }
         }
     }

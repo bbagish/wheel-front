@@ -91,8 +91,6 @@ export default function Register(props) {
                 password: password
             });
 
-            console.log("response", response);
-            console.log("token", response.headers["x-auth-token"])
             auth.loginWithJwt(response.headers["x-auth-token"]);
             props.setUser(auth.getCurrentUser());
             props.history.push('/');
