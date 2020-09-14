@@ -30,7 +30,7 @@ const App = () => {
           <Route exact path={'/'} component={(props) => <Home {...props} positions={positions} user={user} setUser={setUser} setPositions={setPositions} />} />
           <Route exact path={'/positions/:id'} component={(props) => <Position {...props} positions={positions} setPositions={setPositions} user={user} setUser={user} />} />
           <Route exact path={'/dashboard/:id'} component={(props) => <Dashboard {...props} positions={positions} setPositions={setPositions} user={user} setUser={user} />} />
-          <Route exact path={'/register'} component={(props) => <Register {...props} />} />
+          <Route exact path={'/register'} component={(props) => <Register {...props} setUser={setUser}/>} />
           <Route exact path={'/login'} component={(props) => <SignIn {...props} user={user} setUser={setUser} />} />
           <Route exact path="/logout" component={Logout} />
           <Route component={NotFound} />

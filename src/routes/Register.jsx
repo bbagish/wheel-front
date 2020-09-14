@@ -79,7 +79,7 @@ export default function Register(props) {
 
     const doSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!username || !email || !password) {
             return toast.error("All fields must be filled out.");
         }
@@ -94,6 +94,7 @@ export default function Register(props) {
             console.log("response", response);
             console.log("token", response.headers["x-auth-token"])
             auth.loginWithJwt(response.headers["x-auth-token"]);
+            props.setUser(auth.getCurrentUser());
             props.history.push('/');
         } catch (ex) {
             if (ex.response && ex.response.status === 400) {
