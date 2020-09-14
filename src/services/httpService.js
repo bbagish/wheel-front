@@ -2,7 +2,7 @@ import axios from "axios";
 // import logger from "./logService";
 import { toast } from "react-toastify";
 
-axios.defaults.baseURL = "https://wheely-api.herokuapp.com/";
+axios.defaults.baseURL = "https://wheely-api.herokuapp.com/api";
 
 // THIS WILL INTERCEPT ALL REQUEST AND CHECK FOR ERRORS
 axios.interceptors.response.use(null, error => {
