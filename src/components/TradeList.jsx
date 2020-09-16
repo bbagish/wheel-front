@@ -11,6 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CloseTrade from "./CloseTrade";
 import { deleteTrade } from '../services/tradeService';
+import EditTrade from "./EditTrade";
 
 export default function TradeList({ user, position, setPosition }) {
   const formatDate = (date) => {
@@ -55,11 +56,12 @@ export default function TradeList({ user, position, setPosition }) {
                 <TableCell>${(trade.premium).toFixed(2)}</TableCell>
                 <TableCell>{formatDate(trade.filledDate)}</TableCell>
                 <TableCell>{trade.status}</TableCell>
-                <TableCell>{trade.closingPrice != null ? `$${trade.closingPrice}` : null}</TableCell>
+                <TableCell>{trade.closingPrice != null ? `$${trade.closingPrice.toFixed(2)}` : null}</TableCell>
                 <TableCell>{trade.profit != null ? `$${(trade.profit).toFixed(2)}` : null}</TableCell>
                 <TableCell>
                   {(user && user._id === position.author.id) &&
-                    <React.Fragment>
+                  <React.Fragment>
+                      <EditTrade trade={trade}/>
                       <IconButton
                         aria-label="Delete"
                         onClick={() => {
